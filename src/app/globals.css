@@ -119,11 +119,34 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
-    @apply bg-background text-foreground;
-    }
+    @apply bg-background text-foreground text-[16px] leading-relaxed;
+  }
   html {
     @apply font-sans;
-    }
+  }
+  
+  /* গ্লোবাল স্ট্যান্ডার্ড টাইপোগ্রাফি স্কেল */
+  h1 {
+    @apply text-4xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-tight;
+  }
+  h2 {
+    @apply text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white leading-snug;
+  }
+  h3 {
+    @apply text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white leading-snug;
+  }
+  h4 {
+    @apply text-xl font-bold text-neutral-900 dark:text-white;
+  }
+  h5 {
+    @apply text-lg font-semibold text-neutral-900 dark:text-white;
+  }
+  h6 {
+    @apply text-base font-semibold text-neutral-900 dark:text-white;
+  }
+  p {
+    @apply text-[16px] text-neutral-600 dark:text-neutral-300 leading-relaxed;
+  }
 }
