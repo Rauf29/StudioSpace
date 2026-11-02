@@ -1,11 +1,15 @@
+'use client';
+
+import { ThemeToggle } from '@/components/themeToggle';
+
 export default function Home() {
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-center p-24">
 			<h1 className="text-4xl font-bold tracking-tight">StudioSpace</h1>
-			<p className="mt-4 text-lg text-neutral-600">
-				Peer-to-Peer Creative Workspace & Production Studio Sharing
-				Platform
-			</p>
+			<div className="mt-6 flex items-center gap-4">
+				<span>Toggle Theme:</span>
+				<ThemeToggle />
+			</div>
 		</main>
 	);
 }
