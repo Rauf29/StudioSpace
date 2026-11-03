@@ -54,7 +54,7 @@ export function Navbar() {
         
         <Link href="/" className="flex items-center gap-2.5">
           <Aperture className="h-8 w-8 text-[#00897b] stroke-[2.3]" />
-          <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:white">
+          <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
             StudioSpace
           </span>
         </Link>
