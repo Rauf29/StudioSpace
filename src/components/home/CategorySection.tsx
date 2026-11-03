@@ -92,7 +92,7 @@ export function CategorySection() {
             href="/studios"
             className="inline-flex items-center gap-2 text-[16px] font-bold text-[#00897b] hover:text-[#00796b] dark:text-[#80cbc4] transition-colors group self-start md:self-end"
           >
-            <span>Browse All 30 Spaces</span>
+            <span>Browse All Studios</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
@@ -112,7 +112,7 @@ export function CategorySection() {
                       <IconComponent className="h-7 w-7 stroke-[2.2]" />
                     </div>
                     <span className="text-xs font-bold px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
-                      {cat.count}
+                      Explore Spaces
                     </span>
                   </div>
 
