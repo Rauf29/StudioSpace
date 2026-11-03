@@ -1,26 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Aperture, Menu, X, PlusCircle, LayoutDashboard, BookmarkCheck, Building2, LogOut } from "lucide-react";
+import {
+  Aperture,
+  Menu,
+  X,
+  PlusCircle,
+  LayoutDashboard,
+  BookmarkCheck,
+  Building2,
+  LogOut,
+  ChevronDown,
+} from "lucide-react";
 import { ThemeToggle } from "@/components/themeToggle";
 import { useSession, signOut } from "@/lib/auth-client";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "react-toastify";
 
 export function Navbar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -29,7 +32,23 @@ export function Navbar() {
     { name: "About Us", href: "/#about-us" },
   ];
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
+    setUserMenuOpen(false);
     await signOut();
     toast.info("Logged out successfully");
   };
@@ -40,7 +59,7 @@ export function Navbar() {
         
         <Link href="/" className="flex items-center gap-2.5">
           <Aperture className="h-8 w-8 text-[#00897b] stroke-[2.3]" />
-          <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
+          <span className="text-2xl font-bold tracking-tight text-neutral-900 dark:white">
             StudioSpace
           </span>
         </Link>
@@ -67,7 +86,9 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
 
-          {!session?.user ? (
+          {isPending ? (
+            <div className="hidden sm:block h-10 w-24 rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+          ) : !session?.user ? (
             <div className="hidden sm:flex items-center gap-3">
               <Link
                 href="/login"
@@ -83,67 +104,108 @@ export function Navbar() {
               </Link>
             </div>
           ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="outline-none">
-                <Avatar className="h-10 w-10 border-2 border-[#00897b] cursor-pointer">
-                  <AvatarImage src={session.user.image || ""} alt={session.user.name || "User"} />
-                  <AvatarFallback className="bg-emerald-100 text-[#00897b] font-bold">
-                    {session.user.name?.charAt(0).toUpperCase() || "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setUserMenuOpen((prev) => !prev)}
+                className="flex items-center gap-2 p-1 rounded-full border-2 border-[#00897b] hover:ring-2 hover:ring-[#00897b]/30 transition-all outline-none cursor-pointer"
+                aria-label="User menu"
+              >
+                <div className="relative h-9 w-9 rounded-full overflow-hidden flex items-center justify-center bg-emerald-100 dark:bg-emerald-950/60 text-[#00897b] font-bold text-sm">
+                  {session.user.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name || "User"}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <span>{session.user.name?.charAt(0).toUpperCase() || "U"}</span>
+                  )}
+                </div>
+                <ChevronDown className={`h-4 w-4 mr-1 text-neutral-600 dark:text-neutral-300 transition-transform duration-200 ${userMenuOpen ? "rotate-180" : ""}`} />
+              </button>
 
-              <DropdownMenuContent align="end" className="w-56 mt-2">
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-bold text-neutral-900 dark:text-white leading-none">
-                      {session.user.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground leading-none">
-                      {session.user.email}
-                    </p>
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl p-3 z-50 animate-in fade-in-0 zoom-in-95 duration-150">
+                  <div className="flex items-center gap-3 px-2 py-2">
+                    <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-emerald-100 dark:bg-emerald-950/60 text-[#00897b] font-bold">
+                      {session.user.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={session.user.image}
+                          alt={session.user.name || "User"}
+                          referrerPolicy="no-referrer"
+                          className="h-full w-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <span>{session.user.name?.charAt(0).toUpperCase() || "U"}</span>
+                      )}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-sm font-bold text-neutral-900 dark:text-white truncate">
+                        {session.user.name}
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+                        {session.user.email}
+                      </p>
+                    </div>
                   </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
 
-                <DropdownMenuItem className="p-0">
-                  <Link href="/my-listings" className="flex items-center gap-2 w-full px-2 py-1.5 cursor-pointer">
-                    <LayoutDashboard className="h-4 w-4 text-[#00897b]" />
-                    <span>Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
+                  <div className="my-2 border-t border-neutral-200 dark:border-neutral-800" />
 
-                <DropdownMenuItem className="p-0">
-                  <Link href="/add-studio" className="flex items-center gap-2 w-full px-2 py-1.5 cursor-pointer">
-                    <PlusCircle className="h-4 w-4 text-[#00897b]" />
-                    <span>Add New Studio</span>
-                  </Link>
-                </DropdownMenuItem>
+                  <div className="space-y-1">
+                    <Link
+                      href="/my-listings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      <LayoutDashboard className="h-4 w-4 text-[#00897b]" />
+                      <span>Dashboard</span>
+                    </Link>
 
-                <DropdownMenuItem className="p-0">
-                  <Link href="/my-listings" className="flex items-center gap-2 w-full px-2 py-1.5 cursor-pointer">
-                    <Building2 className="h-4 w-4 text-[#00897b]" />
-                    <span>My Studio Listings</span>
-                  </Link>
-                </DropdownMenuItem>
+                    <Link
+                      href="/add-studio"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      <PlusCircle className="h-4 w-4 text-[#00897b]" />
+                      <span>Add New Studio</span>
+                    </Link>
 
-                <DropdownMenuItem className="p-0">
-                  <Link href="/my-bookings" className="flex items-center gap-2 w-full px-2 py-1.5 cursor-pointer">
-                    <BookmarkCheck className="h-4 w-4 text-[#00897b]" />
-                    <span>My Bookings</span>
-                  </Link>
-                </DropdownMenuItem>
+                    <Link
+                      href="/my-listings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      <Building2 className="h-4 w-4 text-[#00897b]" />
+                      <span>My Studio Listings</span>
+                    </Link>
 
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 text-rose-600 focus:text-rose-600 cursor-pointer"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    <Link
+                      href="/my-bookings"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    >
+                      <BookmarkCheck className="h-4 w-4 text-[#00897b]" />
+                      <span>My Bookings</span>
+                    </Link>
+                  </div>
+
+                  <div className="my-2 border-t border-neutral-200 dark:border-neutral-800" />
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              )}
+            </div>
           )}
 
           <button
