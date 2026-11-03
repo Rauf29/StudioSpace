@@ -442,6 +442,82 @@ export default function StudioDetailPage({
               </div>
             </div>
 
+            {/* Creator Reviews Section */}
+            <div className="p-8 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-neutral-200 dark:border-neutral-800">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                    Creator Reviews &amp; Feedback
+                  </h2>
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#00897b]/10 text-[#00897b] dark:bg-[#00897b]/20 dark:text-[#80cbc4]">
+                    {studio.reviews && studio.reviews.length > 0
+                      ? `${studio.reviews.length} Verified`
+                      : "0 Reviews"}
+                  </span>
+                </div>
+
+                {studio.rating && studio.rating > 0 ? (
+                  <div className="flex items-center gap-1.5 text-sm font-bold text-neutral-900 dark:text-white">
+                    <Star className="h-4 w-4 fill-amber-400 text-amber-500" />
+                    <span>{studio.rating.toFixed(1)} out of 5.0</span>
+                  </div>
+                ) : null}
+              </div>
+
+              {studio.reviews && studio.reviews.length > 0 ? (
+                <div className="space-y-4">
+                  {studio.reviews.map((rev, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/80 dark:border-neutral-700/60 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className="h-8 w-8 rounded-full bg-[#00897b]/20 text-[#00897b] font-bold text-xs flex items-center justify-center">
+                            {rev.userName.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <span className="text-sm font-bold text-neutral-900 dark:text-white block">
+                              {rev.userName}
+                            </span>
+                            <span className="text-[11px] text-neutral-400">
+                              {new Date(rev.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-3.5 w-3.5 ${
+                                rev.rating >= star
+                                  ? "fill-amber-400 text-amber-400"
+                                  : "text-neutral-300 dark:text-neutral-700"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-line pl-10">
+                        {rev.comment}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 space-y-2 text-neutral-500">
+                  <p className="text-sm">
+                    No creator reviews published for this space yet.
+                  </p>
+                  <p className="text-xs text-neutral-400">
+                    Book a shoot and complete your reservation to leave the first review!
+                  </p>
+                </div>
+              )}
+            </div>
+
           </div>
 
           {/* Right Column: Sticky Booking Widget (4 of 12 columns) */}

@@ -35,6 +35,13 @@ export interface Studio {
   reviewsCount?: number;
   ownerEmail?: string;
   ownerName?: string;
+  reviews?: Array<{
+    userEmail: string;
+    userName: string;
+    rating: number;
+    comment: string;
+    createdAt: string;
+  }>;
 }
 
 interface BookingModalProps {
