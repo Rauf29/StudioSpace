@@ -26,6 +26,7 @@ import {
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { getServerUrl } from "@/lib/serverUrl";
 
 interface Booking {
   _id: string;
@@ -67,8 +68,7 @@ export default function MyBookingsPage() {
     if (!session?.user) return;
     setLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(`${serverUrl}/api/my-bookings`, {
@@ -107,8 +107,7 @@ export default function MyBookingsPage() {
 
     setCancelLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(
@@ -153,8 +152,7 @@ export default function MyBookingsPage() {
 
     setReviewLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(

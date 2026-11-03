@@ -12,6 +12,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
+import { getServerUrl } from "@/lib/serverUrl";
 
 interface Studio {
   _id: string;
@@ -75,8 +76,7 @@ function StudiosContent() {
   const fetchStudios = useCallback(async () => {
     setLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const params = new URLSearchParams();
 
       if (selectedCategory && selectedCategory !== "All Categories" && selectedCategory !== "All Spaces") {

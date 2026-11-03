@@ -25,6 +25,7 @@ import {
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import BookingModal, { Studio } from "@/components/studios/BookingModal";
+import { getServerUrl } from "@/lib/serverUrl";
 
 export default function StudioDetailPage({
   params,
@@ -54,8 +55,7 @@ export default function StudioDetailPage({
     async function loadStudio() {
       try {
         setLoading(true);
-        const serverUrl =
-          process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+        const serverUrl = getServerUrl();
         const res = await fetch(`${serverUrl}/api/studios/${id}`);
         if (!res.ok) {
           setStudio(null);

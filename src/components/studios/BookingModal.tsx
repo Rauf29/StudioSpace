@@ -18,6 +18,7 @@ import {
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { getServerUrl } from "@/lib/serverUrl";
 
 export interface Studio {
   _id: string;
@@ -128,8 +129,7 @@ export default function BookingModal({
     setLoading(true);
 
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(`${serverUrl}/api/bookings`, {

@@ -28,6 +28,7 @@ import {
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { getServerUrl } from "@/lib/serverUrl";
 
 interface Studio {
   _id: string;
@@ -104,8 +105,7 @@ function MyListingsContent() {
     if (!session?.user) return;
     setLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const headers = { Authorization: `Bearer ${token}` };
@@ -165,8 +165,7 @@ function MyListingsContent() {
 
     setEditLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(`${serverUrl}/api/studios/${editTarget._id}`, {
@@ -199,8 +198,7 @@ function MyListingsContent() {
 
     setDeleteLoading(true);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(`${serverUrl}/api/studios/${deleteTarget._id}`, {
@@ -232,8 +230,7 @@ function MyListingsContent() {
   ) => {
     setStatusUpdateLoadingId(bookingId);
     try {
-      const serverUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const token = await getTokenFromClient();
 
       const res = await fetch(`${serverUrl}/api/bookings/${bookingId}/status`, {

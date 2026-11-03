@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSession } from "@/lib/auth-client";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { getServerUrl } from "@/lib/serverUrl";
 import { toast } from "react-toastify";
 import {
   Building2,
@@ -106,7 +107,7 @@ export default function AddStudioPage() {
     setLoading(true);
 
     try {
-      const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+      const serverUrl = getServerUrl();
       const payload = {
         title: title.trim(),
         category,

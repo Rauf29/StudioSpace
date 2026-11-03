@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+CLIENT_GUIDE_BN.md
+
+StudioSpace_Client_Handbook.html

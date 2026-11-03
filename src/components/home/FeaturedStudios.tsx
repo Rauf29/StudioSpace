@@ -14,6 +14,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { getServerUrl } from "@/lib/serverUrl";
+
 interface Studio {
   _id: string;
   title: string;
@@ -36,8 +38,7 @@ export function FeaturedStudios() {
   useEffect(() => {
     async function fetchFeatured() {
       try {
-        const serverUrl =
-          process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5001";
+        const serverUrl = getServerUrl();
         const res = await fetch(`${serverUrl}/api/featured-studios`);
         if (res.ok) {
           const data = await res.json();
