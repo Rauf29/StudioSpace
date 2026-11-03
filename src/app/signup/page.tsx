@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Aperture, Lock, Mail, User, Image as ImageIcon } from "lucide-react";
-import { signUp } from "@/lib/auth-client";
+import { signUp, signIn } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 
 export default function RegisterPage() {
@@ -64,7 +64,13 @@ export default function RegisterPage() {
   };
 
   const handleGoogleSignup = async () => {
-    toast.info("Google Authentication is connecting...");
+    const { error } = await signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+    if (error) {
+      toast.error("Google sign-in could not be completed.");
+    }
   };
 
   return (

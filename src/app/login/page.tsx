@@ -38,7 +38,13 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
-    toast.info("Google Authentication is connecting...");
+    const { error } = await signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+    if (error) {
+      toast.error("Google sign-in could not be completed.");
+    }
   };
 
   return (

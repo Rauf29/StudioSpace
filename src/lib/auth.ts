@@ -8,7 +8,9 @@ const client = new MongoClient(uri);
 const db = client.db(process.env.DB_NAME || "studiospace");
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db),
+  database: mongodbAdapter(db, {
+    client,
+  }),
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   secret: process.env.BETTER_AUTH_SECRET || "studiospace_secret_key_jwt_2026",
   emailAndPassword: {
@@ -20,6 +22,16 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     },
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+      requireLocalEmailVerified: false,
+    },
+  },
+  trustedOrigins: [
+    "http://localhost:3000",
+  ],
   plugins: [
     jwt(),
   ],
