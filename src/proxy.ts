@@ -20,10 +20,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if ((pathname === "/login" || pathname === "/signup") && sessionCookie) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
   return NextResponse.next();
 }
 
@@ -34,7 +30,5 @@ export const config = {
     "/add-studio/:path*",
     "/my-bookings/:path*",
     "/my-listings/:path*",
-    "/login",
-    "/signup",
   ],
 };
