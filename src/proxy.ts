@@ -6,6 +6,13 @@ export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
   const { pathname } = request.nextUrl;
 
+  const authRoutes = ["/login", "/signup"];
+  const isAuthRoute = authRoutes.includes(pathname);
+
+  if (isAuthRoute && sessionCookie) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   const protectedRoutes = [
     "/add-studio",
     "/my-bookings",
@@ -30,5 +37,7 @@ export const config = {
     "/add-studio/:path*",
     "/my-bookings/:path*",
     "/my-listings/:path*",
+    "/login",
+    "/signup",
   ],
 };

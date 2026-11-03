@@ -1,17 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Aperture, Lock, Mail } from "lucide-react";
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { data: session, isPending } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      router.replace("/");
+    }
+  }, [session, isPending, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +53,10 @@ export default function LoginPage() {
       toast.error("Google sign-in could not be completed.");
     }
   };
+
+  if (!isPending && session?.user) {
+    return null;
+  }
 
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center py-12 px-6 lg:px-8 bg-neutral-50 dark:bg-neutral-950 transition-colors">

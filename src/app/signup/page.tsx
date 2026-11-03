@@ -1,20 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Aperture, Lock, Mail, User, Image as ImageIcon } from "lucide-react";
-import { signUp, signIn } from "@/lib/auth-client";
+import { signUp, signIn, useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { data: session, isPending } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [photoURL, setPhotoURL] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      router.replace("/");
+    }
+  }, [session, isPending, router]);
 
   const validatePassword = (pass: string) => {
     if (pass.length < 6) {
@@ -72,6 +79,10 @@ export default function RegisterPage() {
       toast.error("Google sign-in could not be completed.");
     }
   };
+
+  if (!isPending && session?.user) {
+    return null;
+  }
 
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center py-12 px-6 lg:px-8 bg-neutral-50 dark:bg-neutral-950 transition-colors">
