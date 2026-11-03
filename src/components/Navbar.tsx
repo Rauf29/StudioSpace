@@ -42,11 +42,6 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    setUserMenuOpen(false);
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
   const handleLogout = async () => {
     setUserMenuOpen(false);
     await signOut();
