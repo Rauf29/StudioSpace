@@ -42,3 +42,5 @@
 - **Database**: MongoDB Native Driver (`mongodb`) with Atlas Cluster
 - **Security & Tokens**: JWT Verification (`jose` & `jsonwebtoken` remote key validation)
 - **Environment**: Dotenv, CORS, Cookie-Parser, Nodemon
+
+---
